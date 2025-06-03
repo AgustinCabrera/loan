@@ -57,7 +57,7 @@ export const HomePage = () => {
         {userData ? (
           <Box sx={{ mt: 2 }}>
             <Typography variant="body1">Email: {userData.email}</Typography>
-            <Typography variant="body1">Address: {userData.adress}</Typography>
+            <Typography variant="body1">Address: {userData.address}</Typography>
             <Typography variant="body1">Loan Amount: ${userData.loanAmount}</Typography>
             <Typography variant="body1">Birth Date: {userData.birthDate}</Typography>
             <Typography variant="body1">Phone Number: {userData.phoneNumber}</Typography>

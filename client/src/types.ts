@@ -3,7 +3,7 @@ export interface User {
   firstName: string;
   lastName: string;
   email: string;
-  adress: string;
+  address: string;
   loanAmount: number;
   birthDate: string;
   phoneNumber: string;
@@ -19,6 +19,10 @@ export interface RegisterFormData {
   lastName: string;
   email: string;
   password: string;
+  address: string;
+  birthDate: Date;
+  loanAmount: number;
+  phone: string;
 }
 
 export interface AuthContextType {

@@ -3,7 +3,7 @@ import './App.css';
 import { Route, Routes, Navigate, BrowserRouter, useNavigate, useLocation } from 'react-router-dom';
 import { HomePage } from './components/Home';
 import LoginForm from './components/LoginForm';
-import { RegisterForm } from './components/RegisterForm';
+import RegisterForm from './components/RegisterForm';
 import { useAuth } from './hooks/useAuth';
 import { Box, Container, CssBaseline, ThemeProvider } from '@mui/material';
 import { customTheme } from './theme';
