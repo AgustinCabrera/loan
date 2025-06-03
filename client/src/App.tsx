@@ -1,6 +1,6 @@
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import './App.css';
-import { Route, Routes, Navigate, Router, useNavigate, useLocation } from 'react-router-dom';
+import { Route, Routes, Navigate, BrowserRouter, useNavigate, useLocation } from 'react-router-dom';
 import { HomePage } from './components/Home';
 import LoginForm from './components/LoginForm';
 import { RegisterForm } from './components/RegisterForm';
@@ -9,12 +9,12 @@ import { Box, Container, CssBaseline, ThemeProvider } from '@mui/material';
 import { customTheme } from './theme';
 import { AuthProvider } from './context/AuthContext';
 
-function ProtectedRoute({ children }: { children: ReactNode }) {
+function ProtectedRoute({ children }: { children: ReactNode }): React.ReactElement {
   const { isAuthenticated } = useAuth();
   if (!isAuthenticated) {
     return <Navigate to="/login" />;
   }
-  return children;
+  return <>{children}</>;
 }
 function AppRoutes() {
   const { isAuthenticated } = useAuth();
@@ -40,18 +40,14 @@ function AppRoutes() {
   );
 }
 export default function App() {
-  const location = useLocation();
-  const history = useNavigate();
-
   return (
     <ThemeProvider theme={customTheme}>
       <CssBaseline />
-      <Router location={location} navigator={history}>
-        {/* TODO: check if the router works */}
+      <BrowserRouter>
         <AuthProvider>
           <AppRoutes />
         </AuthProvider>
-      </Router>
+      </BrowserRouter>
     </ThemeProvider>
   );
 }
