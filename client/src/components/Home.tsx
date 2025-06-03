@@ -1,10 +1,10 @@
 import { Box, Button, Container, Paper, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { UserData } from '../types';
+import { User } from '../types';
 
 export const HomePage = () => {
-  const [userData, setUserData] = useState<UserData | null>(null);
+  const [userData, setUserData] = useState<User | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {

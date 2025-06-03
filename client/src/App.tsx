@@ -1,29 +1,57 @@
-import React from 'react';
+import { ReactNode } from 'react';
 import './App.css';
-import { Route, BrowserRouter, Routes } from 'react-router-dom';
-import { RegisterPage } from './pages/RegisterPage';
-import { LoginPage } from './pages/LoginPage';
-import { HomePage } from './pages/HomePage';
-import ProtectedRoute from './components/ProtectedRoute';
+import { Route, Routes, Navigate, Router, useNavigate, useLocation } from 'react-router-dom';
+import { HomePage } from './components/Home';
+import LoginForm from './components/LoginForm';
+import { RegisterForm } from './components/RegisterForm';
+import { useAuth } from './hooks/useAuth';
+import { Box, Container, CssBaseline, ThemeProvider } from '@mui/material';
+import { customTheme } from './theme';
+import { AuthProvider } from './context/AuthContext';
 
-function App() {
+function ProtectedRoute({ children }: { children: ReactNode }) {
+  const { isAuthenticated } = useAuth();
+  if (!isAuthenticated) {
+    return <Navigate to="/login" />;
+  }
+  return children;
+}
+function AppRoutes() {
+  const { isAuthenticated } = useAuth();
+
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route
-          path="/home"
-          element={
-            <ProtectedRoute>
-              <HomePage />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
-    </BrowserRouter>
+    <Container maxWidth="lg">
+      <Box sx={{ py: 4 }}>
+        <Routes>
+          <Route path="/" element={isAuthenticated ? <HomePage /> : <Navigate to="/register" />} />
+          <Route path="/register" element={<RegisterForm />} />
+          <Route path="/login" element={<LoginForm />} />
+          <Route
+            path="/home"
+            element={
+              <ProtectedRoute>
+                <HomePage />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </Box>
+    </Container>
   );
 }
+export default function App() {
+  const location = useLocation();
+  const history = useNavigate();
 
-export default App;
+  return (
+    <ThemeProvider theme={customTheme}>
+      <CssBaseline />
+      <Router location={location} navigator={history}>
+        {/* TODO: check if the router works */}
+        <AuthProvider>
+          <AppRoutes />
+        </AuthProvider>
+      </Router>
+    </ThemeProvider>
+  );
+}
