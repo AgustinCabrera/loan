@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
 
-export const validateRegisterLoan = [
+export const validateRegisterUser = [
   body('name')
     .notEmpty()
     .withMessage('Name is required')

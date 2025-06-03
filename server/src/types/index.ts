@@ -3,14 +3,9 @@ export interface UserDTO {
   name: string;
   lastName: string;
   email: string;
+  password: string;
   address: string;
   loanAmount: number;
   birthDate: string;
   phoneNumber: string;
-  password: string;
-}
-
-export interface User {
-  id: number;
-  email: string;
-}
+} 
