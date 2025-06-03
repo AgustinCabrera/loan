@@ -1,16 +1,8 @@
 import { Box, Button, Container, Paper, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { UserData } from '../types';
 
-interface UserData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  adress: string;
-  loanAmount: number;
-  birthDate: string;
-  phoneNumber: string;
-}
 export const HomePage = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const navigate = useNavigate();
@@ -35,7 +27,7 @@ export const HomePage = () => {
         console.error('Error fetching user data:', error);
         navigate('/login');
       });
-  }, [navigate]); //? check navigate dependency
+  }, [navigate]); //!!!!! check navigate dependency
 
   const handleLogout = () => {
     fetch('/api/logout', {
