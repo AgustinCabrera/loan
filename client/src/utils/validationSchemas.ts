@@ -14,10 +14,8 @@ export const validateAge = (birthDate: Date | undefined) => {
   return age >= 18;
 };
 
-const phoneRegex = /^\(\d{3}\)\s\d{3}-\d{4}$/;
-
 export const registerSchema = yup.object({
-  firstName: yup
+  name: yup
     .string()
     .required('First name is required')
     .min(2, 'First name must be at least 2 characters')
@@ -35,7 +33,10 @@ export const registerSchema = yup.object({
     .string()
     .required('Address is required')
     .min(10, 'Address must be at least 10 characters')
-    .matches(/^[a-zA-Z0-9\s,'-]*$/, 'Address should not contain special characters'),
+    .matches(
+      /^[a-zA-Z0-9\s,'-]*$/,
+      'Address must contain only letters, numbers, spaces, commas, and hyphens'
+    ),
 
   password: yup
     .string()
@@ -60,7 +61,7 @@ export const registerSchema = yup.object({
   phone: yup
     .string()
     .required('Phone number is required')
-    .matches(phoneRegex, 'Phone number must be in the format (123) 456-7890'),
+    .matches(/^\(\d{3}\)\s\d{3}-\d{4}$/, 'Phone number must be in the format (123) 456-7890'),
 });
 
 export const loginSchema = yup.object({

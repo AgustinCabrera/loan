@@ -129,6 +129,43 @@ export default function RegisterForm() {
               />
             </Box>
 
+            {/*last name*/}
+            <Box sx={{ mb: 3 }}>
+              <FormLabel sx={{ mb: 1, display: 'block', fontWeight: 500 }}>Last name</FormLabel>
+              <TextField
+                {...register('lastName')}
+                type="text"
+                placeholder="Enter your last name here"
+                fullWidth
+                error={!!errors.lastName}
+                helperText={errors.lastName?.message}
+                sx={{
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: '16px',
+                    padding: '4px',
+                    '& fieldset': {
+                      borderColor: errors.lastName ? '#f87171' : '#e5e7eb',
+                    },
+                    '&:hover fieldset': {
+                      borderColor: '#7c6fb0',
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: '#7c6fb0',
+                      borderWidth: '2px',
+                    },
+                  },
+                  '& .MuiOutlinedInput-input': {
+                    padding: '16px',
+                    color: '#374151',
+                    '&::placeholder': {
+                      color: '#9ca3af',
+                      opacity: 1,
+                    },
+                  },
+                }}
+              />
+            </Box>
+
             {/*address*/}
             <Box sx={{ mb: 3 }}>
               <FormLabel sx={{ mb: 1, display: 'block', fontWeight: 500 }}>Address</FormLabel>
