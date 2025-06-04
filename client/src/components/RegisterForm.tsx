@@ -454,13 +454,12 @@ export default function RegisterForm() {
               }}
             >
               <Typography color="error" sx={{ fontWeight: 500, mb: 1 }}>
-                Please fix the following errors:
+                {error.split('\n').map((message, index) => (
+                  <Typography key={index} color="error" sx={{ fontSize: '0.875rem', mb: 0.5 }}>
+                    Error: {message}
+                  </Typography>
+                ))}
               </Typography>
-              {error.split('\n').map((message, index) => (
-                <Typography key={index} color="error" sx={{ fontSize: '0.875rem', mb: 0.5 }}>
-                  • {message}
-                </Typography>
-              ))}
             </Box>
           )}
         </Box>
