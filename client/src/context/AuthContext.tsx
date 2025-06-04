@@ -6,23 +6,41 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const verifyToken = async (token: string) => {
+    try {
+      const response = await fetch('/api/user', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error('Invalid token');
+      }
+      
+      const userData = await response.json();
+      setUser(userData);
+      setIsAuthenticated(true);
+    } catch (error) {
+      console.error('Token verification failed:', error);
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      setUser(null);
+      setIsAuthenticated(false);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // check for session storage
   useEffect(() => {
     const token = localStorage.getItem('token');
-    const user = localStorage.getItem('user');
-    if (token && user) {
-      try {
-        const parsedUser = JSON.parse(user);
-        setUser(parsedUser);
-        setIsAuthenticated(true);
-      } catch (error) {
-        console.error('Error parsing user from localStorage:', error);
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        setUser(null);
-        setIsAuthenticated(false);
-      }
+    if (token) {
+      verifyToken(token);
+    } else {
+      setIsLoading(false);
     }
   }, []);
 
@@ -95,7 +113,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, login, register, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, isLoading, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

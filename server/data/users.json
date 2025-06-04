@@ -9,5 +9,16 @@
     "lastName": "Cabrera",
     "name": "Agustin Hernan",
     "id": "fdb5f009-b8b9-420c-a285-0234f7314a5c"
+  },
+  {
+    "phone": "(123) 216-7490",
+    "loanAmount": "199999",
+    "birthDate": "1949-10-10",
+    "password": "$2b$10$p8Ku75deW2ICnrfy/LSE6e0a/tmx/4dsA5c1fX9/xvUO5.syjRGd2",
+    "address": "220 Langdon St",
+    "email": "tete@gmail.com",
+    "lastName": "Sanchez",
+    "name": "Pedro",
+    "id": "d581e167-8b98-46a5-b5c5-965f8f7a46f1"
   }
 ]

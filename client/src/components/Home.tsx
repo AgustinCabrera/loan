@@ -1,81 +1,100 @@
-import { Box, Button, Container, Paper, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { Box, Button, Container, Grid, Paper, Typography, Divider } from '@mui/material';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User } from '../types';
+import { useAuth } from '../hooks/useAuth';
+import { Email, Phone, Home } from '@mui/icons-material';
 
 export const HomePage = () => {
-  const [userData, setUserData] = useState<User | null>(null);
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const data = fetch('/api/user', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setUserData(data);
-      })
-      .catch((error) => {
-        console.error('Error fetching user data:', error);
-        navigate('/login');
-      });
-  }, [navigate]); //!!!!! check navigate dependency
-
   const handleLogout = () => {
-    fetch('/api/logout', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        navigate('/login');
-      })
-      .catch((error) => {
-        console.error('Error logging out:', error);
-      });
+    logout();
+    navigate('/login');
   };
 
   return (
-    <Container maxWidth="sm" sx={{ mt: 4 }}>
-      <Paper elevation={3} sx={{ p: 4 }}>
-        <Typography variant="h5" gutterBottom>
-          Welcome, {userData ? `${userData.firstName} ${userData.lastName}` : 'User'}!
-        </Typography>
+    <Container maxWidth="lg" sx={{ py: 4, display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+      <Grid container spacing={2}>
+        {/* main  */}
+          <Paper
+            elevation={3}
+            sx={{
+              p: 4,
+              borderRadius: 3,
+              background: "white",
+            }}
+          >
+            {/* header  */}
+            <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
+              <Typography
+                variant="h4"
+                sx={{
+                  fontWeight: 700,
+                  color: "#2c3e50",
+                  fontSize: { xs: "24px", md: "32px" },
+                }}
+              >
+                Congrats {user?.name}!
+              </Typography>
+            </Box>
 
-        {userData ? (
-          <Box sx={{ mt: 2 }}>
-            <Typography variant="body1">Email: {userData.email}</Typography>
-            <Typography variant="body1">Address: {userData.address}</Typography>
-            <Typography variant="body1">Loan Amount: ${userData.loanAmount}</Typography>
-            <Typography variant="body1">Birth Date: {userData.birthDate}</Typography>
-            <Typography variant="body1">Phone Number: {userData.phoneNumber}</Typography>
-
-            <Button
-              variant="contained"
-              color="secondary"
-              sx={{ mt: 3 }}
-              onClick={handleLogout}
-              fullWidth
+            {/*message */}
+            <Typography
+              variant="h6"
+              sx={{
+                mb: 4,
+                color: "#34495e",
+                lineHeight: 1.4,
+                fontSize: { xs: "18px", md: "20px" },
+              }}
             >
-              logout
-            </Button>
-          </Box>
-        ) : (
-          <Typography variant="body1">Loading user data...</Typography>
-        )}
-      </Paper>
+              You've been pre-qualified for a loan up to a{" "}
+              <Box component="span" sx={{ fontWeight: 700, color: "#2980b9" }}>
+                ${user?.loanAmount.toLocaleString()}
+              </Box>{" "}
+              loan 
+            </Typography>
+
+            <Divider sx={{ my: 3 }} />
+
+            {/* property information */}
+            <Box sx={{ mb: 4 }}>
+              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, color: "#2c3e50" }}>
+                Home Address
+              </Typography>
+              <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                <Home sx={{ color: "#7f8c8d", mr: 1 }} />
+                <Typography variant="body1" color="text.secondary">
+                  {user?.address}
+                </Typography>
+              </Box>
+            </Box>
+
+            {/* contact information */}
+            <Box sx={{ mb: 4 }}>
+              <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, color: "#2c3e50" }}>
+                Your Information
+              </Typography>
+              <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
+                <Email sx={{ color: "#7f8c8d", mr: 1 }} />
+                <Typography variant="body1" color="text.secondary">
+                  {user?.email}
+                </Typography>
+              </Box>
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Phone sx={{ color: "#7f8c8d", mr: 1 }} />
+                <Typography variant="body1" color="text.secondary">
+                  {user?.phone}
+                </Typography>
+              </Box>
+            </Box>
+            <Button variant="contained" color="primary" onClick={handleLogout}>
+              Logout
+              </Button>
+          </Paper>
+        </Grid>
+      
     </Container>
   );
 };

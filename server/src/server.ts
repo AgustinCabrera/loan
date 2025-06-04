@@ -25,6 +25,7 @@ try {
 // routes
 app.use('/api', authRouter);
 
+
 // health check endpoint
 app.get('/health', (req, res) => {
   res.json({ status: 'ok' });

@@ -5,6 +5,8 @@ import {
   validateLoginUser,
   handleValidationErrors,
 } from '../middleware/validationSchemas';
+import { getUserController } from '../controllers/userController';
+import { authenticateToken } from '../middleware/authMiddleware';
 
 const router = express.Router();
 
@@ -16,5 +18,6 @@ const asyncHandler = (fn: RequestHandler): RequestHandler => {
 
 router.post('/register', validateRegisterUser, handleValidationErrors, asyncHandler(registerUser));
 router.post('/login', validateLoginUser, handleValidationErrors, asyncHandler(loginUser));
+router.get('/user', authenticateToken, asyncHandler(getUserController));
 
 export default router;

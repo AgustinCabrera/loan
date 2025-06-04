@@ -1,3 +1,5 @@
+import { Request } from "express";
+
 export interface UserDTO {
   id: string;
   name: string;
@@ -7,5 +9,11 @@ export interface UserDTO {
   address: string;
   loanAmount: number;
   birthDate: string;
-  phoneNumber: string;
-} 
+  phone: string;
+}
+
+export interface AuthenticatedRequest extends Request {
+  user?: {
+    id: string;
+  };
+}

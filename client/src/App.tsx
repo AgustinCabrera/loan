@@ -5,19 +5,37 @@ import { HomePage } from './components/Home';
 import LoginForm from './components/LoginForm';
 import RegisterForm from './components/RegisterForm';
 import { useAuth } from './hooks/useAuth';
-import { Box, Container, CssBaseline, ThemeProvider } from '@mui/material';
+import { Box, Container, CssBaseline, ThemeProvider, CircularProgress } from '@mui/material';
 import { customTheme } from './theme';
 import { AuthProvider } from './context/AuthContext';
 
 function ProtectedRoute({ children }: { children: ReactNode }): React.ReactElement {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
+  
+  if (isLoading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+  
   if (!isAuthenticated) {
     return <Navigate to="/login" />;
   }
   return <>{children}</>;
 }
+
 function AppRoutes() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Container maxWidth="lg">
@@ -39,6 +57,7 @@ function AppRoutes() {
     </Container>
   );
 }
+
 export default function App() {
   return (
     <ThemeProvider theme={customTheme}>
