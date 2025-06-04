@@ -20,5 +20,49 @@
     "lastName": "Sanchez",
     "name": "Pedro",
     "id": "d581e167-8b98-46a5-b5c5-965f8f7a46f1"
+  },
+  {
+    "phone": "(123) 456-7890",
+    "loanAmount": "35000",
+    "birthDate": "1999-10-07",
+    "password": "$2b$10$hzajBQ9K.S.sPkfRplu4ve6ueb5ClEPFxZiImNy0FQIqX4CKQPS96",
+    "address": "Andres Pasos 123",
+    "email": "carlos@gmail.com",
+    "lastName": "Aguirre",
+    "name": "Carlos",
+    "id": "460044af-ea2e-4f1f-9680-72a38a7b6d4b"
+  },
+  {
+    "phone": "(123) 456-7890",
+    "loanAmount": "27003",
+    "birthDate": "1975-12-02",
+    "password": "$2b$10$tzDPlz0Y8ziZsR.8RhqsS.6c/xyDI.Vpa1kiKRA9onrTMA6BLRi22",
+    "address": "Piedras 5976",
+    "email": "perey@gmail.com",
+    "lastName": "Rey",
+    "name": "Peter",
+    "id": "0b6b0722-4fda-4730-a077-3edaa7961263"
+  },
+  {
+    "phone": "(123) 456-7890",
+    "loanAmount": "50000",
+    "birthDate": "1999-01-01",
+    "password": "$2b$10$w5.d0c43JIl9t8S5bfNfPeQQ6aTDhei4Ubfx8u/lvSsr8HC618rk2",
+    "address": "Normandia 896",
+    "email": "acirio@gmail.com",
+    "lastName": "Cirio",
+    "name": "Agustin",
+    "id": "7c3b57f3-d76c-4fb5-bcb9-afbac6c6e601"
+  },
+  {
+    "phone": "(123) 456-7890",
+    "loanAmount": "70000",
+    "birthDate": "2000-01-01",
+    "password": "$2b$10$khntACBJW81IRb2iwBxzwe23quTo3X29exQcvpdGP5WWzsKo9iImK",
+    "address": "Polonia 345",
+    "email": "pedropi@gmail.com",
+    "lastName": "Picapiedras",
+    "name": "Pedro",
+    "id": "ed5009d8-0420-4751-8380-cf8e66b8e279"
   }
 ]

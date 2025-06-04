@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { RegisterFormData } from '../types';
+"use client"
+
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { yupResolver } from "@hookform/resolvers/yup"
+import type { RegisterFormData } from "../types"
 import {
   Box,
   Button,
@@ -11,21 +13,25 @@ import {
   Typography,
   InputAdornment,
   IconButton,
-} from '@mui/material';
-import { EyeOff, Eye } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
-import { registerSchema } from '../utils/validationSchemas';
-import { useAuth } from '../hooks/useAuth';
+  Snackbar,
+  Alert,
+} from "@mui/material"
+import { EyeOff, Eye } from "lucide-react"
+import { Link, useNavigate } from "react-router-dom"
+import { registerSchema } from "../utils/validationSchemas"
+import { useAuth } from "../hooks/useAuth"
 
 export default function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showSuccess, setShowSuccess] = useState(false);
   const { register: registerUser } = useAuth();
   const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm<RegisterFormData>({
     resolver: yupResolver(registerSchema),
@@ -49,7 +55,10 @@ export default function RegisterForm() {
         birthDate: new Date(data.birthDate).toISOString().split('T')[0],
       };
       await registerUser(formattedData);
-      navigate('/home');
+      setShowSuccess(true);
+      setTimeout(() => {
+        navigate('/home');
+      }, 3000);
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
@@ -72,7 +81,35 @@ export default function RegisterForm() {
         padding: 2,
       }}
     >
+      {/* //! Snackbar isn't shown when the user is registering*/}
+      <Snackbar
+        open={showSuccess}
+        autoHideDuration={3000}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        sx={{
+          zIndex: 9999,
+          '& .MuiAlert-root': {
+            backgroundColor: '#7c6fb0',
+            color: 'white',
+            '& .MuiAlert-icon': {
+              color: 'white',
+            },
+          },
+        }}
+      >
+        <Alert 
+          severity="success" 
+          sx={{ 
+            width: '100%',
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+            borderRadius: '8px',
+          }}
+        >
+          Registration successful! Redirecting to home page...
+        </Alert>
+      </Snackbar>
       <Box sx={{ maxWidth: '450px', width: '100%' }}>
+        
         {/*header*/}
         <Box sx={{ mb: 4 }}>
           <Typography
@@ -439,7 +476,28 @@ export default function RegisterForm() {
             >
               {isSubmitting ? 'Registering...' : 'Register'}
             </Button>
-          </form>
+            <Button
+              type="button"
+              onClick={() => reset()}
+              fullWidth
+              sx={{
+                mt: 2,
+                backgroundColor: 'transparent',
+                color: '#7c6fb0',
+                padding: '12px 16px',
+                borderRadius: '12px',
+                fontSize: '16px',
+                fontWeight: 500,
+                textTransform: 'none',
+                border: '2px solid #7c6fb0',
+                '&:hover': {
+                  backgroundColor: '#f3f4f6',
+                },
+              }}
+            >
+              Clear Form
+            </Button>
+          
           <Typography variant="body1" sx={{ textAlign: 'center', mt: 2 }}>
             Already have a loan? <Link to="/login">Login</Link>
           </Typography>
@@ -462,6 +520,7 @@ export default function RegisterForm() {
               </Typography>
             </Box>
           )}
+          </form>
         </Box>
       </Box>
     </Container>
