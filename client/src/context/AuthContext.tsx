@@ -10,6 +10,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const verifyToken = async (token: string) => {
     try {
+      console.log('Verifying token:', token.substring(0, 10) + '...');
       const response = await fetch('/api/user', {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -17,10 +18,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
       
       if (!response.ok) {
+        console.error('Token verification failed with status:', response.status);
         throw new Error('Invalid token');
       }
       
-      const userData = await response.json();
+      const { user: userData } = await response.json();
+      console.log('Token verified successfully, user data received');
+      
+      // Store user data in localStorage
+      localStorage.setItem('user', JSON.stringify(userData));
       setUser(userData);
       setIsAuthenticated(true);
     } catch (error) {
@@ -36,10 +42,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // check for session storage
   useEffect(() => {
+    console.log('AuthProvider initialized, checking for existing token');
     const token = localStorage.getItem('token');
+    const storedUser = localStorage.getItem('user');
+    
     if (token) {
+      console.log('Token found in localStorage, verifying...');
       verifyToken(token);
     } else {
+      console.log('No token found in localStorage');
       setIsLoading(false);
     }
   }, []);
@@ -60,6 +71,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       const data = await response.json();
+      console.log('Login successful, storing token and user data');
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
       setUser(data.user);
@@ -95,6 +107,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       const data = await response.json();
+      console.log('Registration successful, storing token and user data');
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
       setUser(data.user);
@@ -106,6 +119,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = () => {
+    console.log('Logging out, removing token and user data');
     setUser(null);
     setIsAuthenticated(false);
     localStorage.removeItem('token');

@@ -1,30 +1,74 @@
-import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
-import { findUserById } from '../config/database';
+import { Request, Response, NextFunction } from "express";
+import jwt from "jsonwebtoken";
+import { findUserById } from "../config/database";
 
 interface JwtPayload {
-  userId: string;
+  id: string;
 }
 
-export const authenticateToken = async (req: Request, res: Response, next: NextFunction) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1]; // barer token
-
-  if (!token)
-    return res
-      .sendStatus(401)
-      .json({ success: false, message: 'Unauthorized. Access token required' });
-
-  try {
-    const verification = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
-    const user = await findUserById(verification.userId);
-
-    if (!user) {
-      return res.status(404).json({ success: false, message: ' User not found' });
+// express request extension to include user
+declare global {
+  namespace Express {
+    interface Request {
+      user?: { id: string };
     }
+  }
+}
+
+export const authenticateToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const authHeader = req.headers["authorization"];
+    if (!authHeader) {
+      return res.status(401).json({
+        success: false,
+        message: "No authorization header",
+      });
+    }
+
+    const token = authHeader.split(" ")[1]; // Bearer token
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        message: "No token provided",
+      });
+    }
+
+    const verification = jwt.verify(
+      token,
+      process.env.JWT_SECRET || "your-secret-key"
+    ) as JwtPayload;
+
+    const user = await findUserById(verification.id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
     req.user = { id: user.id };
-    next(); // continue to next middleware
+    next();
   } catch (error) {
-    return res.status(401).json({ success: false, message: 'Unauthorized. Invalid token' });
+    if (error instanceof jwt.TokenExpiredError) {
+      return res.status(401).json({
+        success: false,
+        message: "Token expired",
+      });
+    }
+    if (error instanceof jwt.JsonWebTokenError) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid token",
+      });
+    }
+    console.error("Auth middleware error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
   }
 };

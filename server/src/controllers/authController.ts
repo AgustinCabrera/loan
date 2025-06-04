@@ -33,9 +33,11 @@ export const registerUser = async (
 
     await createUser(newUser);
 
-    const token = jwt.sign({ id: newUser.id }, process.env.JWT_SECRET || 'your-secret-key', {
-      expiresIn: '24h',
-    });
+    const token = jwt.sign(
+      { id: newUser.id }, 
+      process.env.JWT_SECRET || 'your-secret-key',
+      { expiresIn: '24h' }
+    );
 
     const { password, ...userWithoutPassword } = newUser;
     res.status(201).json({
@@ -65,9 +67,11 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
       return;
     }
 
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET || 'your-secret-key', {
-      expiresIn: '24h',
-    });
+    const token = jwt.sign(
+      { id: user.id },
+      process.env.JWT_SECRET || 'your-secret-key',
+      { expiresIn: '24h' }
+    );
 
     const { password: _, ...userWithoutPassword } = user;
     res.json({

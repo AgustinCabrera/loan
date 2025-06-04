@@ -1,17 +1,24 @@
-import { Box, Button, Container, Grid, Paper, Typography, Divider } from '@mui/material';
-import React from 'react';
+import { Box, Button, Container, Grid, Paper, Typography, Divider, CircularProgress } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { Email, Phone, Home } from '@mui/icons-material';
 
 export const HomePage = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, isLoading } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
     navigate('/login');
   };
+
+  if (isLoading || !user) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Container maxWidth="lg" sx={{ py: 4, display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
@@ -35,10 +42,9 @@ export const HomePage = () => {
                   fontSize: { xs: "24px", md: "32px" },
                 }}
               >
-                Congrats {user?.name}!
+                Congrats {user.name}!
               </Typography>
             </Box>
-
             {/*message */}
             <Typography
               variant="h6"
@@ -50,14 +56,12 @@ export const HomePage = () => {
               }}
             >
               You've been pre-qualified for a loan up to a{" "}
-              <Box component="span" sx={{ fontWeight: 700, color: "#2980b9" }}>
-                ${user?.loanAmount.toLocaleString()}
+              <Box component="span" sx={{ fontWeight: 700, color: "#7c6fb0" }}>
+                ${user.loanAmount?.toLocaleString() || '0'}
               </Box>{" "}
               loan 
             </Typography>
-
             <Divider sx={{ my: 3 }} />
-
             {/* property information */}
             <Box sx={{ mb: 4 }}>
               <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, color: "#2c3e50" }}>
@@ -66,11 +70,10 @@ export const HomePage = () => {
               <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
                 <Home sx={{ color: "#7f8c8d", mr: 1 }} />
                 <Typography variant="body1" color="text.secondary">
-                  {user?.address}
+                  {user.address}
                 </Typography>
               </Box>
             </Box>
-
             {/* contact information */}
             <Box sx={{ mb: 4 }}>
               <Typography variant="h6" sx={{ mb: 2, fontWeight: 600, color: "#2c3e50" }}>
@@ -79,22 +82,31 @@ export const HomePage = () => {
               <Box sx={{ display: "flex", alignItems: "center", mb: 1 }}>
                 <Email sx={{ color: "#7f8c8d", mr: 1 }} />
                 <Typography variant="body1" color="text.secondary">
-                  {user?.email}
+                  {user.email}
                 </Typography>
               </Box>
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Phone sx={{ color: "#7f8c8d", mr: 1 }} />
                 <Typography variant="body1" color="text.secondary">
-                  {user?.phone}
+                  {user.phone}
                 </Typography>
               </Box>
             </Box>
-            <Button variant="contained" color="primary" onClick={handleLogout}>
-              Logout
-              </Button>
+            <Button
+            variant="contained"
+            color="primary"
+            onClick={handleLogout}
+            sx={{
+              width: "100%",
+              display: "block",
+              mx: "auto",
+              backgroundColor: '#7c6fb0',
+            }}
+          >
+            Logout
+          </Button>
           </Paper>
         </Grid>
-      
     </Container>
   );
 };

@@ -26,8 +26,25 @@ function ProtectedRoute({ children }: { children: ReactNode }): React.ReactEleme
   return <>{children}</>;
 }
 
-function AppRoutes() {
+function PublicRoute({ children }: { children: ReactNode }): React.ReactElement {
   const { isAuthenticated, isLoading } = useAuth();
+  
+  if (isLoading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+  
+  if (isAuthenticated) {
+    return <Navigate to="/home" />;
+  }
+  return <>{children}</>;
+}
+
+function AppRoutes() {
+  const { isLoading } = useAuth();
 
   if (isLoading) {
     return (
@@ -41,9 +58,23 @@ function AppRoutes() {
     <Container maxWidth="lg">
       <Box sx={{ py: 4 }}>
         <Routes>
-          <Route path="/" element={isAuthenticated ? <HomePage /> : <Navigate to="/register" />} />
-          <Route path="/register" element={<RegisterForm />} />
-          <Route path="/login" element={<LoginForm />} />
+          <Route path="/" element={<Navigate to="/home" />} />
+          <Route 
+            path="/register" 
+            element={
+              <PublicRoute>
+                <RegisterForm />
+              </PublicRoute>
+            } 
+          />
+          <Route 
+            path="/login" 
+            element={
+              <PublicRoute>
+                <LoginForm />
+              </PublicRoute>
+            } 
+          />
           <Route
             path="/home"
             element={
