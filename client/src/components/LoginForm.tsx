@@ -79,7 +79,7 @@ export default function LoginForm() {
               mb: 0.5,
             }}
           >
-            Hello!
+            Hello.
           </Typography>
           <Typography
             variant="h2"
