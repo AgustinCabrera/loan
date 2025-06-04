@@ -1,1 +1,13 @@
-[]
+[
+  {
+    "phone": "(123) 456-7890",
+    "loanAmount": "2600",
+    "birthDate": "1999-02-02",
+    "password": "$2b$10$xGrzfW3yLlcfmljd6Ga3vuQ7l6qtsomGeLxq.SkbqgQqZnMmtD/O2",
+    "address": "Piedras 5976",
+    "email": "agustinhkramer@gmail.com",
+    "lastName": "Cabrera",
+    "name": "Agustin Hernan",
+    "id": "fdb5f009-b8b9-420c-a285-0234f7314a5c"
+  }
+]

@@ -28,7 +28,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (email: string, password: string): Promise<void> => {
     try {
-      // login api call
       const response = await fetch('/api/login', {
         method: 'POST',
         headers: {
@@ -37,21 +36,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         body: JSON.stringify({ email: email, password: password }),
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
-        setUser(data.user);
-        setIsAuthenticated(true);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
       }
+
+      const data = await response.json();
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      setUser(data.user);
+      setIsAuthenticated(true);
     } catch (error) {
       console.error('Login error:', error);
+      throw error;
     }
   };
 
   const register = async (formData: RegisterFormData): Promise<void> => {
     try {
-      // register api call
       const response = await fetch('/api/register', {
         method: 'POST',
         headers: {
@@ -60,15 +62,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         body: JSON.stringify(formData),
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
-        setUser(data.user);
-        setIsAuthenticated(true);
+      if (!response.ok) {
+        const errorData = await response.json();
+        if (errorData.errors) {
+          const errorMessages = errorData.errors
+            .map((err: { path: string; messages: string[] }) => {
+              const fieldName = err.path.charAt(0).toUpperCase() + err.path.slice(1);
+              return `${fieldName}: ${err.messages.join(', ')}`;
+            })
+            .join('\n');
+          throw new Error(errorMessages);
+        }
+        throw new Error(errorData.message || 'Registration failed');
       }
+
+      const data = await response.json();
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      setUser(data.user);
+      setIsAuthenticated(true);
     } catch (error) {
       console.error('Registration error:', error);
+      throw error;
     }
   };
 

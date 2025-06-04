@@ -15,12 +15,12 @@ export interface LoginFormData {
 }
 
 export interface RegisterFormData {
-  firstName: string;
+  name: string;
   lastName: string;
   email: string;
   password: string;
   address: string;
-  birthDate: Date;
+  birthDate: string;
   loanAmount: number;
   phone: string;
 }
@@ -29,6 +29,6 @@ export interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (formData: RegisterFormData) => Promise<void>;
+  register: (data: RegisterFormData) => Promise<void>;
   logout: () => void;
 }

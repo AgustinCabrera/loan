@@ -1,8 +1,29 @@
 import { NextFunction, Request, Response } from 'express';
-import { body, validationResult } from 'express-validator';
+import { body, validationResult, ValidationError } from 'express-validator';
+
+const validatePhoneNumber = (value: string) => {
+  const digitsOnly = value.replace(/\D/g, ''); // remove all non-digit characters
+  if (digitsOnly.length !== 10) {
+    // check if the number has a valid length (10 digits for US numbers)
+    throw new Error('Phone number must contain 10 digits');
+  }
+
+  // check if the number starts with a valid area code (1-9)
+  if (!/^[1-9]/.test(digitsOnly)) {
+    throw new Error('Phone number must start with a digit between 1-9');
+  }
+
+  const formattedNumber = `(${digitsOnly.slice(0, 3)}) ${digitsOnly.slice(3, 6)}-${digitsOnly.slice(6)}`;
+  if (value !== formattedNumber) {
+    throw new Error('Phone number must be in format (XXX) XXX-XXXX');
+  }
+
+  return true;
+};
 
 export const validateRegisterUser = [
   body('name')
+    .trim()
     .notEmpty()
     .withMessage('Name is required')
     .isLength({ min: 3 })
@@ -11,6 +32,7 @@ export const validateRegisterUser = [
     .withMessage('Name must contain only letters and spaces'),
 
   body('lastName')
+    .trim()
     .notEmpty()
     .withMessage('Last name is required')
     .isLength({ min: 2 })
@@ -19,6 +41,7 @@ export const validateRegisterUser = [
     .withMessage('Last name must contain only letters and spaces'),
 
   body('email')
+    .trim()
     .notEmpty()
     .withMessage('Email is required')
     .isEmail()
@@ -26,6 +49,7 @@ export const validateRegisterUser = [
     .normalizeEmail(),
 
   body('address')
+    .trim()
     .notEmpty()
     .withMessage('Address is required')
     .isLength({ min: 10 })
@@ -34,6 +58,7 @@ export const validateRegisterUser = [
     .withMessage('Address must contain only letters, numbers, spaces, commas, and hyphens'),
 
   body('password')
+    .trim()
     .notEmpty()
     .withMessage('Password is required')
     .isLength({ min: 8 })
@@ -44,6 +69,7 @@ export const validateRegisterUser = [
     ),
 
   body('birthDate')
+    .trim()
     .notEmpty()
     .withMessage('Birth date is required')
     .isDate()
@@ -55,47 +81,67 @@ export const validateRegisterUser = [
       const monthDiff = today.getMonth() - birthDate.getMonth();
 
       if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-        return age - 1 >= 18;
-      }
-      return age >= 18;
-    }),
-
-  body('phone')
-    .notEmpty()
-    .withMessage('Phone number is required')
-    .matches(/^\(\d{3}\)\s\d{3}-\d{4}$/)
-    .withMessage('Invalid phone number format'),
-
-  body('loanAmount')
-    .notEmpty()
-    .withMessage('Loan amount is required')
-    .isNumeric()
-    .withMessage('Loan amount must be a number')
-    .custom((value) => {
-      if (value < 2500) {
-        throw new Error('Loan amount must be at least $2500');
-      }
-      if (value > 250000) {
-        throw new Error('Loan amount must be less than $250000');
-      }
-      if (value.toString().includes('.')) {
-        throw new Error('Loan amount must be a whole number');
+        if (age - 1 < 18) {
+          throw new Error('You must be at least 18 years old');
+        }
+      } else if (age < 18) {
+        throw new Error('You must be at least 18 years old');
       }
       return true;
     }),
+
+  body('phone')
+    .trim()
+    .notEmpty()
+    .withMessage('Phone number is required')
+    .custom(validatePhoneNumber),
+
+  body('loanAmount')
+    .trim()
+    .notEmpty()
+    .withMessage('Loan amount is required')
+    .isInt({ min: 25000, max: 250000 })
+    .withMessage('Loan amount must be a whole number between $25,000 and $250,000'),
 ];
+
 export const validateLoginUser = [
-  body('email').notEmpty().withMessage('Email is required').isEmail(),
+  body('email')
+    .trim()
+    .notEmpty()
+    .withMessage('Email is required')
+    .isEmail()
+    .withMessage('Invalid email address')
+    .normalizeEmail(),
 
-  body('password').notEmpty().withMessage('Password is required'),
+  body('password').trim().notEmpty().withMessage('Password is required'),
 ];
 
-export const handleValidationErrors = (req: Request, res: Response, next: NextFunction) => {
+export const handleValidationErrors = (req: Request, res: Response, next: NextFunction): void => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res
-      .status(400)
-      .json({ success: false, message: 'Validation error', errors: errors.array() });
+    // group errors by field to avoid duplicates
+    const groupedErrors = errors
+      .array()
+      .reduce((acc: { [key: string]: string[] }, error: ValidationError) => {
+        const path = 'path' in error ? error.path : 'unknown';
+        if (!acc[path]) {
+          acc[path] = [];
+        }
+        if (!acc[path].includes(error.msg)) {
+          acc[path].push(error.msg);
+        }
+        return acc;
+      }, {});
+
+    res.status(400).json({
+      success: false,
+      message: 'Validation error',
+      errors: Object.entries(groupedErrors).map(([path, messages]) => ({
+        path,
+        messages,
+      })),
+    });
+    return;
   }
   next();
 };

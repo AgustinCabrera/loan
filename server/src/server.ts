@@ -23,7 +23,7 @@ try {
   process.exit(1);
 }
 // routes
-app.use('/api/auth', authRouter);
+app.use('/api', authRouter);
 
 // health check endpoint
 app.get('/health', (req, res) => {

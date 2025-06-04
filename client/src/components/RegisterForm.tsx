@@ -13,11 +13,15 @@ import {
   IconButton,
 } from '@mui/material';
 import { EyeOff, Eye } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { registerSchema } from '../utils/validationSchemas';
+import { useAuth } from '../hooks/useAuth';
 
 export default function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const { register: registerUser } = useAuth();
+  const navigate = useNavigate();
 
   const {
     register,
@@ -28,10 +32,10 @@ export default function RegisterForm() {
     defaultValues: {
       email: '',
       password: '',
-      firstName: '',
+      name: '',
       lastName: '',
       address: '',
-      birthDate: new Date(),
+      birthDate: new Date().toISOString().split('T')[0],
       loanAmount: 0,
       phone: '',
     },
@@ -39,12 +43,19 @@ export default function RegisterForm() {
 
   const onSubmit = async (data: RegisterFormData) => {
     try {
-      console.log('Register attempt:', { data });
-      //api call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      //TODO: handle api call
+      setError(null);
+      const formattedData = {
+        ...data,
+        birthDate: new Date(data.birthDate).toISOString().split('T')[0],
+      };
+      await registerUser(formattedData);
+      navigate('/home');
     } catch (error) {
-      console.error('Register error:', error);
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('An unexpected error occurred');
+      }
     }
   };
 
@@ -96,18 +107,18 @@ export default function RegisterForm() {
             <Box sx={{ mb: 3 }}>
               <FormLabel sx={{ mb: 1, display: 'block', fontWeight: 500 }}>Name</FormLabel>
               <TextField
-                {...register('firstName')}
+                {...register('name')}
                 type="text"
                 placeholder="Enter your first name here"
                 fullWidth
-                error={!!errors.firstName}
-                helperText={errors.firstName?.message}
+                error={!!errors.name}
+                helperText={errors.name?.message}
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     borderRadius: '16px',
                     padding: '4px',
                     '& fieldset': {
-                      borderColor: errors.firstName ? '#f87171' : '#e5e7eb',
+                      borderColor: errors.name ? '#f87171' : '#e5e7eb',
                     },
                     '&:hover fieldset': {
                       borderColor: '#7c6fb0',
@@ -432,6 +443,26 @@ export default function RegisterForm() {
           <Typography variant="body1" sx={{ textAlign: 'center', mt: 2 }}>
             Already have a loan? <Link to="/login">Login</Link>
           </Typography>
+          {error && (
+            <Box
+              sx={{
+                mt: 2,
+                p: 2,
+                backgroundColor: '#fee2e2',
+                borderRadius: 1,
+                border: '1px solid #f87171',
+              }}
+            >
+              <Typography color="error" sx={{ fontWeight: 500, mb: 1 }}>
+                Please fix the following errors:
+              </Typography>
+              {error.split('\n').map((message, index) => (
+                <Typography key={index} color="error" sx={{ fontSize: '0.875rem', mb: 0.5 }}>
+                  • {message}
+                </Typography>
+              ))}
+            </Box>
+          )}
         </Box>
       </Box>
     </Container>

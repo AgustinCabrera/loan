@@ -36,7 +36,11 @@ export const registerSchema = yup.object({
     .matches(
       /^[a-zA-Z0-9\s,'-]*$/,
       'Address must contain only letters, numbers, spaces, commas, and hyphens'
-    ),
+    )
+    .test('not-all-numbers', 'Address cannot be all numbers', (value) => {
+      if (!value) return true;
+      return !/^\d+$/.test(value);
+    }),
 
   password: yup
     .string()
@@ -48,15 +52,20 @@ export const registerSchema = yup.object({
     ),
 
   birthDate: yup
-    .date()
+    .string()
     .required('Birth date is required')
-    .test('is-valid-age', 'You must be at least 18 years old', validateAge),
+    .matches(/^\d{4}-\d{2}-\d{2}$/, 'Birth date must be in YYYY-MM-DD format')
+    .test('is-valid-age', 'You must be at least 18 years old', (value) => {
+      if (!value) return false;
+      const birthDate = new Date(value);
+      return validateAge(birthDate);
+    }),
 
   loanAmount: yup
     .number()
     .required('Loan amount is required')
-    .min(2500, 'Loan amount must be at least $2500')
-    .max(250000, 'Loan amount must be less than $250000'),
+    .min(25000, 'Loan amount must be at least $25,000')
+    .max(250000, 'Loan amount must be less than $250,000'),
 
   phone: yup
     .string()

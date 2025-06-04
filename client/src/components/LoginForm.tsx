@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
+import { LoginFormData } from '../types';
 import {
   Box,
   Button,
@@ -15,20 +15,14 @@ import {
   IconButton,
 } from '@mui/material';
 import { EyeOff, Eye } from 'lucide-react';
-import { Link } from 'react-router-dom';
-
-interface LoginFormData {
-  email: string;
-  password: string;
-}
-
-const loginSchema = yup.object().shape({
-  email: yup.string().email('Invalid email address').required('Email is required'),
-  password: yup.string().required('Password is required'),
-});
+import { Link, useNavigate } from 'react-router-dom';
+import { loginSchema } from '../utils/validationSchemas';
+import { useAuth } from '../hooks/useAuth';
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const {
     register,
@@ -44,10 +38,8 @@ export default function LoginForm() {
 
   const onSubmit = async (data: LoginFormData) => {
     try {
-      console.log('Login attempt:', { data });
-      //api call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      //TODO: handle api call
+      await login(data.email, data.password);
+      navigate('/home');
     } catch (error) {
       console.error('Login error:', error);
     }

@@ -1,6 +1,5 @@
-import Database from 'better-sqlite3';
 import path from 'path';
-import { UserDTO } from '../types';
+import { UserDTO } from '../types/index';
 import fs from 'fs';
 
 // data directory
@@ -18,7 +17,6 @@ export const initDatabase = (): void => {
       fs.writeFileSync(USERS_FILE, JSON.stringify([]));
       console.log('Users file created successfully');
     }
-    console.log('Database initialized successfully');
   } catch (error) {
     console.error('Error initializing JSON database:', error);
     throw error;
@@ -26,21 +24,17 @@ export const initDatabase = (): void => {
 };
 
 export const getUsers = (): UserDTO[] => {
-  // get all the users from the users.json file
   try {
     const users = JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
-    return JSON.parse(users) as UserDTO[];
+    return users as UserDTO[];
   } catch (error) {
     console.error('Error getting users:', error);
     return [];
   }
 };
 
-const saveUser = (user: UserDTO): void => {
-  // save the user to the users.json file
+const saveUsers = (users: UserDTO[]): void => {
   try {
-    const users = getUsers();
-    users.push(user);
     fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
   } catch (error) {
     console.error('Error writing user data:', error);
@@ -70,16 +64,16 @@ export const findUserById = (id: string): UserDTO | null => {
   }
 };
 
-export const createUser = (user: UserDTO): UserDTO => {
+export const createUser = (newUser: UserDTO): UserDTO => {
   try {
     const users = getUsers();
-    if (users.find((user: UserDTO) => user.email === user.email)) {
+    if (users.find((user: UserDTO) => user.email === newUser.email)) {
       throw new Error('User already exists');
     }
-    users.push(user);
-    saveUser(user);
-    console.log('User created successfully', user);
-    return user;
+    users.push(newUser);
+    saveUsers(users);
+    console.log('User created successfully', newUser);
+    return newUser;
   } catch (error) {
     console.error('Error creating user:', error);
     throw error;
