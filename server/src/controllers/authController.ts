@@ -16,7 +16,7 @@ export const registerUser = async (
       id: uuidv4(),
     };
 
-    // Check if user exists
+    // check if user exists
     const existingUser = await findUserByEmail(userData.email);
     if (existingUser) {
       res.status(400).json({ success: false, message: 'User already exists' });
@@ -35,7 +35,7 @@ export const registerUser = async (
 
     const token = jwt.sign(
       { id: newUser.id }, 
-      process.env.JWT_SECRET || 'your-secret-key',
+      process.env.JWT_SECRET || 'secret',
       { expiresIn: '24h' }
     );
 
@@ -69,7 +69,7 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
 
     const token = jwt.sign(
       { id: user.id },
-      process.env.JWT_SECRET || 'your-secret-key',
+      process.env.JWT_SECRET || 'secret',
       { expiresIn: '24h' }
     );
 

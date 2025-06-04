@@ -21,6 +21,7 @@ export const authenticateToken = async (
   next: NextFunction
 ) => {
   try {
+    // get the authorization header
     const authHeader = req.headers["authorization"];
     if (!authHeader) {
       return res.status(401).json({
@@ -29,7 +30,8 @@ export const authenticateToken = async (
       });
     }
 
-    const token = authHeader.split(" ")[1]; // Bearer token
+    // get the token from the authorization header
+    const token = authHeader.split(" ")[1]; // bearer token
     if (!token) {
       return res.status(401).json({
         success: false,
@@ -39,7 +41,7 @@ export const authenticateToken = async (
 
     const verification = jwt.verify(
       token,
-      process.env.JWT_SECRET || "your-secret-key"
+      process.env.JWT_SECRET || "secret"
     ) as JwtPayload;
 
     const user = await findUserById(verification.id);

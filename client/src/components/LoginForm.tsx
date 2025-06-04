@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { LoginFormData } from '../types';
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { LoginFormData } from "../types";
 import {
   Box,
   Button,
@@ -13,11 +13,11 @@ import {
   Typography,
   InputAdornment,
   IconButton,
-} from '@mui/material';
-import { EyeOff, Eye } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
-import { loginSchema } from '../utils/validationSchemas';
-import { useAuth } from '../hooks/useAuth';
+} from "@mui/material";
+import { EyeOff, Eye } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { loginSchema } from "../utils/validationSchemas";
+import { useAuth } from "../hooks/useAuth";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -31,17 +31,17 @@ export default function LoginForm() {
   } = useForm<LoginFormData>({
     resolver: yupResolver(loginSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
   });
 
   const onSubmit = async (data: LoginFormData) => {
     try {
       await login(data.email, data.password);
-      navigate('/home');
+      navigate("/home");
     } catch (error) {
-      console.error('Login error:', error);
+      console.error("Login error:", error);
     }
   };
 
@@ -49,24 +49,24 @@ export default function LoginForm() {
     <Container
       maxWidth={false}
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: '100vh',
-        backgroundColor: '#f9f7f1',
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        minHeight: "100vh",
+        backgroundColor: "#f9f7f1",
         padding: 2,
       }}
     >
-      <Box sx={{ maxWidth: '450px', width: '100%' }}>
+      <Box sx={{ maxWidth: "450px", width: "100%" }}>
         {/*header*/}
         <Box sx={{ mb: 4 }}>
           <Typography
             variant="h1"
             sx={{
-              fontSize: '72px',
+              fontSize: "72px",
               fontWeight: 700,
-              color: '#7c6fb0',
+              color: "#7c6fb0",
               lineHeight: 1.1,
               mb: 0.5,
             }}
@@ -76,9 +76,9 @@ export default function LoginForm() {
           <Typography
             variant="h2"
             sx={{
-              fontSize: '48px',
+              fontSize: "48px",
               fontWeight: 700,
-              color: '#333',
+              color: "#333",
               lineHeight: 1.1,
             }}
           >
@@ -87,37 +87,39 @@ export default function LoginForm() {
         </Box>
 
         {/*form container*/}
-        <Box sx={{ backgroundColor: 'white', borderRadius: 2, padding: 3 }}>
+        <Box sx={{ backgroundColor: "white", borderRadius: 2, padding: 3 }}>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Box sx={{ mb: 3 }}>
-              <FormLabel sx={{ mb: 1, display: 'block', fontWeight: 500 }}>Email address</FormLabel>
+              <FormLabel sx={{ mb: 1, display: "block", fontWeight: 500 }}>
+                Email address
+              </FormLabel>
               <TextField
-                {...register('email')}
+                {...register("email")}
                 type="email"
                 placeholder="Enter your email here"
                 fullWidth
                 error={!!errors.email}
                 helperText={errors.email?.message}
                 sx={{
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: '16px',
-                    padding: '4px',
-                    '& fieldset': {
-                      borderColor: errors.email ? '#f87171' : '#e5e7eb',
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "16px",
+                    padding: "4px",
+                    "& fieldset": {
+                      borderColor: errors.email ? "#f87171" : "#e5e7eb",
                     },
-                    '&:hover fieldset': {
-                      borderColor: '#7c6fb0',
+                    "&:hover fieldset": {
+                      borderColor: "#7c6fb0",
                     },
-                    '&.Mui-focused fieldset': {
-                      borderColor: '#7c6fb0',
-                      borderWidth: '2px',
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#7c6fb0",
+                      borderWidth: "2px",
                     },
                   },
-                  '& .MuiOutlinedInput-input': {
-                    padding: '16px',
-                    color: '#374151',
-                    '&::placeholder': {
-                      color: '#9ca3af',
+                  "& .MuiOutlinedInput-input": {
+                    padding: "16px",
+                    color: "#374151",
+                    "&::placeholder": {
+                      color: "#9ca3af",
                       opacity: 1,
                     },
                   },
@@ -127,10 +129,12 @@ export default function LoginForm() {
 
             {/*password*/}
             <Box sx={{ mb: 4 }}>
-              <FormLabel sx={{ mb: 1, display: 'block', fontWeight: 500 }}>Password</FormLabel>
+              <FormLabel sx={{ mb: 1, display: "block", fontWeight: 500 }}>
+                Password
+              </FormLabel>
               <TextField
-                {...register('password')}
-                type={showPassword ? 'text' : 'password'}
+                {...register("password")}
+                type={showPassword ? "text" : "password"}
                 placeholder="Type in here"
                 fullWidth
                 error={!!errors.password}
@@ -141,39 +145,45 @@ export default function LoginForm() {
                       <IconButton
                         onClick={() => setShowPassword(!showPassword)}
                         edge="end"
-                        aria-label={showPassword ? 'Hide password' : 'Show password'}
+                        aria-label={
+                          showPassword ? "Hide password" : "Show password"
+                        }
                         sx={{
-                          color: '#9ca3af',
-                          '&:hover': {
-                            color: '#6b7280',
+                          color: "#9ca3af",
+                          "&:hover": {
+                            color: "#6b7280",
                           },
                         }}
                       >
-                        {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                        {showPassword ? (
+                          <EyeOff size={20} />
+                        ) : (
+                          <Eye size={20} />
+                        )}
                       </IconButton>
                     </InputAdornment>
                   ),
                 }}
                 sx={{
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: '16px',
-                    padding: '4px',
-                    '& fieldset': {
-                      borderColor: errors.password ? '#f87171' : '#e5e7eb',
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "16px",
+                    padding: "4px",
+                    "& fieldset": {
+                      borderColor: errors.password ? "#f87171" : "#e5e7eb",
                     },
-                    '&:hover fieldset': {
-                      borderColor: '#7c6fb0',
+                    "&:hover fieldset": {
+                      borderColor: "#7c6fb0",
                     },
-                    '&.Mui-focused fieldset': {
-                      borderColor: '#7c6fb0',
-                      borderWidth: '2px',
+                    "&.Mui-focused fieldset": {
+                      borderColor: "#7c6fb0",
+                      borderWidth: "2px",
                     },
                   },
-                  '& .MuiOutlinedInput-input': {
-                    padding: '16px',
-                    color: '#374151',
-                    '&::placeholder': {
-                      color: '#9ca3af',
+                  "& .MuiOutlinedInput-input": {
+                    padding: "16px",
+                    color: "#374151",
+                    "&::placeholder": {
+                      color: "#9ca3af",
                       opacity: 1,
                     },
                   },
@@ -187,26 +197,26 @@ export default function LoginForm() {
               disabled={isSubmitting}
               fullWidth
               sx={{
-                backgroundColor: '#7c6fb0',
-                color: 'white',
-                padding: '12px 16px',
-                borderRadius: '12px',
-                fontSize: '16px',
+                backgroundColor: "#7c6fb0",
+                color: "white",
+                padding: "12px 16px",
+                borderRadius: "12px",
+                fontSize: "16px",
                 fontWeight: 500,
-                textTransform: 'none',
-                '&:hover': {
-                  backgroundColor: '#6a5996',
+                textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#6a5996",
                 },
-                '&:disabled': {
+                "&:disabled": {
                   opacity: 0.5,
-                  cursor: 'not-allowed',
+                  cursor: "not-allowed",
                 },
               }}
             >
-              {isSubmitting ? 'Logging in...' : 'Login'}
+              {isSubmitting ? "Logging in..." : "Login"}
             </Button>
           </form>
-          <Typography variant="body1" sx={{ textAlign: 'center', mt: 2 }}>
+          <Typography variant="body1" sx={{ textAlign: "center", mt: 2 }}>
             Don't have a loan? <Link to="/register">Register</Link>
           </Typography>
         </Box>
