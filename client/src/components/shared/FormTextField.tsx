@@ -5,7 +5,7 @@ import {
   InputAdornment,
   IconButton,
 } from "@mui/material";
-import { Eye, EyeOff } from "lucide-react";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useState } from "react";
 
 interface FormTextFieldProps {
@@ -50,7 +50,7 @@ export const FormTextField = ({
                   },
                 }}
               >
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                {showPassword ? <VisibilityOff /> : <Visibility />}
               </IconButton>
             </InputAdornment>
           ),

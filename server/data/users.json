@@ -108,5 +108,16 @@
     "lastName": "Rockefeller",
     "name": "Jeremy",
     "id": "be19cd64-0462-4751-bca8-01ead37d37d9"
+  },
+  {
+    "phone": "(123) 456-7890",
+    "loanAmount": "27000",
+    "birthDate": "1999-01-01",
+    "password": "$2b$10$NNGZDIEb5wsRwR0JHKJgJe/TnV.UjDllRpi5rVw1R.5qpn8uOXZIC",
+    "address": "Chacabuco 583",
+    "email": "pedritoo@gmail.com",
+    "lastName": "Suarez",
+    "name": "pedro",
+    "id": "a10b1624-d608-4289-84b9-56339bcefba7"
   }
 ]
