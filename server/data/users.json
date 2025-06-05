@@ -97,5 +97,16 @@
     "lastName": "Alvarez",
     "name": "Sergio",
     "id": "1b986641-f0a8-4eec-962b-8320cca5375b"
+  },
+  {
+    "phone": "(123) 456-7890",
+    "loanAmount": "25000",
+    "birthDate": "1999-01-01",
+    "password": "$2b$10$BEQvkV7VW6P3K4qzgzz8UOkwegR2XQpYIG6yDIJNoFFyQLhHOb/Zm",
+    "address": "Kingdom 23",
+    "email": "jr@gmail.com",
+    "lastName": "Rockefeller",
+    "name": "Jeremy",
+    "id": "be19cd64-0462-4751-bca8-01ead37d37d9"
   }
 ]
