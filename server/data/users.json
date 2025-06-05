@@ -119,5 +119,16 @@
     "lastName": "Suarez",
     "name": "pedro",
     "id": "a10b1624-d608-4289-84b9-56339bcefba7"
+  },
+  {
+    "phone": "+13125550472",
+    "loanAmount": "27000",
+    "birthDate": "1999-01-01",
+    "password": "$2b$10$5J47IT0RsPeXi9nj.XaApeFvzHxQTvRLmhHDcFAxj91oY06lxVcSC",
+    "address": "Peruvian 279",
+    "email": "tito@gmail.com",
+    "lastName": "El bambino",
+    "name": "Tito",
+    "id": "235b133e-556d-42f5-91c9-2d6005cd92fd"
   }
 ]

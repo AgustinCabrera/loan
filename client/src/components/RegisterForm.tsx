@@ -159,7 +159,7 @@ export default function RegisterForm() {
           label="Phone"
           name="phone"
           type="tel"
-          placeholder="Phone must be in format (123) 456-7890"
+          placeholder="Enter your phone number here"
           register={register}
           error={errors.phone?.message}
         />

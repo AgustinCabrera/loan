@@ -132,6 +132,9 @@ export const HomePage = () => {
             display: "block",
             mx: "auto",
             backgroundColor: "#7c6fb0",
+            "&:hover": {
+              backgroundColor: "#7c6fb0",
+            },
           }}
         >
           Logout
