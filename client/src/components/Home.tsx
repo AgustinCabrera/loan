@@ -14,12 +14,13 @@ import { Email, Phone, Home } from "@mui/icons-material";
 export const HomePage = () => {
   const { user, logout, isLoading } = useAuth();
   const navigate = useNavigate();
-
+  // handle logout
   const handleLogout = () => {
     logout();
     navigate("/login");
   };
 
+  // return loading
   if (isLoading || !user) {
     return (
       <Box
@@ -35,6 +36,7 @@ export const HomePage = () => {
     );
   }
 
+  // return home page
   return (
     <Container
       maxWidth="lg"

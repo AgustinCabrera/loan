@@ -15,7 +15,7 @@ import { handleFormSubmission } from "../utils/formUtils";
 export default function LoginForm() {
   const { login } = useAuth();
   const navigate = useNavigate();
-
+  // use form
   const {
     register,
     handleSubmit,
@@ -28,6 +28,7 @@ export default function LoginForm() {
     },
   });
 
+  // on submit
   const onSubmit = async (data: LoginFormData) => {
     handleFormSubmission(
       (formData) => login(formData.email, formData.password),
@@ -37,6 +38,7 @@ export default function LoginForm() {
     );
   };
 
+  // return form
   return (
     <FormLayout title="Hello." subtitle="Login here.">
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -63,7 +65,7 @@ export default function LoginForm() {
         </FormButton>
       </form>
       <Typography variant="body1" sx={{ textAlign: "center", mt: 2 }}>
-        Don't have a loan? <Link to="/register">Register</Link>
+        Don't have an account? <Link to="/register">Register</Link>
       </Typography>
     </FormLayout>
   );

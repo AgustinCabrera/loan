@@ -1,38 +1,47 @@
-import React, { createContext, useState, useEffect } from 'react';
-import { AuthContextType, RegisterFormData, User } from '../types';
+import React, { createContext, useState, useEffect } from "react";
+import { AuthContextType, RegisterFormData, User } from "../types";
 
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+// create context
+export const AuthContext = createContext<AuthContextType | undefined>(
+  undefined
+);
 
+// create provider
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  // verify token
   const verifyToken = async (token: string) => {
     try {
-      console.log('Verifying token:', token.substring(0, 10) + '...');
-      const response = await fetch('/api/user', {
+      // verify token
+      console.log("Verifying token:", token.substring(0, 10) + "...");
+      const response = await fetch("/api/user", {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
-      
+
       if (!response.ok) {
-        console.error('Token verification failed with status:', response.status);
-        throw new Error('Invalid token');
+        console.error(
+          "Token verification failed with status:",
+          response.status
+        );
+        throw new Error("Invalid token");
       }
-      
+
       const { user: userData } = await response.json();
-      console.log('Token verified successfully, user data received');
-      
+      console.log("Token verified successfully, user data received");
+
       // Store user data in localStorage
-      localStorage.setItem('user', JSON.stringify(userData));
+      localStorage.setItem("user", JSON.stringify(userData));
       setUser(userData);
       setIsAuthenticated(true);
     } catch (error) {
-      console.error('Token verification failed:', error);
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
+      console.error("Token verification failed:", error);
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
       setUser(null);
       setIsAuthenticated(false);
     } finally {
@@ -42,52 +51,54 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // check for session storage
   useEffect(() => {
-    console.log('AuthProvider initialized, checking for existing token');
-    const token = localStorage.getItem('token');
-    const storedUser = localStorage.getItem('user');
-    
+    console.log("AuthProvider initialized, checking for existing token");
+    const token = localStorage.getItem("token");
+    const storedUser = localStorage.getItem("user");
+
     if (token) {
-      console.log('Token found in localStorage, verifying...');
+      console.log("Token found in localStorage, verifying...");
       verifyToken(token);
     } else {
-      console.log('No token found in localStorage');
+      console.log("No token found in localStorage");
       setIsLoading(false);
     }
   }, []);
 
+  // login
   const login = async (email: string, password: string): Promise<void> => {
     try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
+      const response = await fetch("/api/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ email: email, password: password }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Login failed');
+        throw new Error(errorData.message || "Login failed");
       }
 
       const data = await response.json();
-      console.log('Login successful, storing token and user data');
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
+      console.log("Login successful, storing token and user data");
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
       setUser(data.user);
       setIsAuthenticated(true);
     } catch (error) {
-      console.error('Login error:', error);
+      console.error("Login error:", error);
       throw error;
     }
   };
 
+  // register
   const register = async (formData: RegisterFormData): Promise<void> => {
     try {
-      const response = await fetch('/api/register', {
-        method: 'POST',
+      const response = await fetch("/api/register", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
@@ -97,37 +108,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (errorData.errors) {
           const errorMessages = errorData.errors
             .map((err: { path: string; messages: string[] }) => {
-              const fieldName = err.path.charAt(0).toUpperCase() + err.path.slice(1);
-              return `${fieldName}: ${err.messages.join(', ')}`;
+              const fieldName =
+                err.path.charAt(0).toUpperCase() + err.path.slice(1);
+              return `${fieldName}: ${err.messages.join(", ")}`;
             })
-            .join('\n');
+            .join("\n");
           throw new Error(errorMessages);
         }
-        throw new Error(errorData.message || 'Registration failed');
+        throw new Error(errorData.message || "Registration failed");
       }
 
       const data = await response.json();
-      console.log('Registration successful, storing token and user data');
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
+      console.log("Registration successful, storing token and user data");
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
       setUser(data.user);
       setIsAuthenticated(true);
     } catch (error) {
-      console.error('Registration error:', error);
+      console.error("Registration error:", error);
       throw error;
     }
   };
 
+  // logout
   const logout = () => {
-    console.log('Logging out, removing token and user data');
+    console.log("Logging out, removing token and user data");
     setUser(null);
     setIsAuthenticated(false);
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
   };
 
+  // return provider
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, isLoading, login, register, logout }}>
+    <AuthContext.Provider
+      value={{ user, isAuthenticated, isLoading, login, register, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );

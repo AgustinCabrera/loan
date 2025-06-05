@@ -59,6 +59,7 @@ export default function RegisterForm() {
 
   return (
     <FormLayout title="Hello." subtitle="Apply for your loan here.">
+      {/* success notification */}
       <SuccessNotification
         open={showSuccess}
         message="Registration successful! Redirecting to home page..."
@@ -92,6 +93,7 @@ export default function RegisterForm() {
         </Alert>
       </Snackbar>
 
+      {/* register form */}
       <form onSubmit={handleSubmit(onSubmit)}>
         <FormTextField
           label="Name"
@@ -182,7 +184,7 @@ export default function RegisterForm() {
         </FormButton>
 
         <Typography variant="body1" sx={{ textAlign: "center", mt: 2 }}>
-          Already have a loan? <Link to="/login">Login</Link>
+          Already have an account? <Link to="/login">Login</Link>
         </Typography>
         <ErrorDisplay error={error} />
       </form>

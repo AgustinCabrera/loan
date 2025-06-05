@@ -18,10 +18,12 @@ npm run install-all
 ```bash
 npm run dev
 ```
+
 The server will run on http://localhost:3000
 The client will run on http://localhost:3001
 
 ## Accessing the Application
 
-Once both servers are running, you can access the application by opening http://localhost:3001 in your web browser.
-****
+Once both servers are running, you can access the application by opening http://localhost:3001 in your web browser, make sure you have the ports available.
+
+---

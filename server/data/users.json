@@ -130,5 +130,16 @@
     "lastName": "El bambino",
     "name": "Tito",
     "id": "235b133e-556d-42f5-91c9-2d6005cd92fd"
+  },
+  {
+    "phone": "+1 (312) 555-0472",
+    "loanAmount": "25000",
+    "birthDate": "1975-01-01",
+    "password": "$2b$10$KoER7C1vTRQp7gyfarvei.24Sg7PPN/OglntVKCJ18m8.jgPMXhO.",
+    "address": "Madrid 2018",
+    "email": "chicho@gmail.com",
+    "lastName": "Serna",
+    "name": "Chicho",
+    "id": "e73e5f8f-06f6-446a-9ee2-a424f811fb9c"
   }
 ]

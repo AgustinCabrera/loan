@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { body, validationResult, ValidationError } from "express-validator";
 
+// validate phone number
 const validatePhoneNumber = (value: string) => {
   // accepts different phone number formats
   const internationalPattern =
@@ -23,6 +24,7 @@ const validatePhoneNumber = (value: string) => {
   );
 };
 
+// validate register user
 export const validateRegisterUser = [
   body("name")
     .trim()
@@ -115,6 +117,7 @@ export const validateRegisterUser = [
     ),
 ];
 
+// validate login user
 export const validateLoginUser = [
   body("email")
     .trim()
@@ -127,6 +130,7 @@ export const validateLoginUser = [
   body("password").trim().notEmpty().withMessage("Password is required"),
 ];
 
+// handle validation errors
 export const handleValidationErrors = (
   req: Request,
   res: Response,
