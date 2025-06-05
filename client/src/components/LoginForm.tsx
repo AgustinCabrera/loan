@@ -1,26 +1,18 @@
 "use client";
 
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { LoginFormData } from "../types";
-import {
-  Box,
-  Button,
-  Container,
-  FormLabel,
-  TextField,
-  Typography,
-  InputAdornment,
-  IconButton,
-} from "@mui/material";
-import { EyeOff, Eye } from "lucide-react";
+import { Typography } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { loginSchema } from "../utils/validationSchemas";
 import { useAuth } from "../hooks/useAuth";
+import { FormLayout } from "./shared/FormLayout";
+import { FormTextField } from "./shared/FormTextField";
+import { FormButton } from "./shared/FormButton";
+import { handleFormSubmission } from "../utils/formUtils";
 
 export default function LoginForm() {
-  const [showPassword, setShowPassword] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -37,190 +29,42 @@ export default function LoginForm() {
   });
 
   const onSubmit = async (data: LoginFormData) => {
-    try {
-      await login(data.email, data.password);
-      navigate("/home");
-    } catch (error) {
-      console.error("Login error:", error);
-    }
+    handleFormSubmission(
+      (formData) => login(formData.email, formData.password),
+      data,
+      navigate,
+      "/home"
+    );
   };
 
   return (
-    <Container
-      maxWidth={false}
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        minHeight: "100vh",
-        backgroundColor: "#f9f7f1",
-        padding: 2,
-      }}
-    >
-      <Box sx={{ maxWidth: "450px", width: "100%" }}>
-        {/*header*/}
-        <Box sx={{ mb: 4 }}>
-          <Typography
-            variant="h1"
-            sx={{
-              fontSize: "72px",
-              fontWeight: 700,
-              color: "#7c6fb0",
-              lineHeight: 1.1,
-              mb: 0.5,
-            }}
-          >
-            Hello.
-          </Typography>
-          <Typography
-            variant="h2"
-            sx={{
-              fontSize: "48px",
-              fontWeight: 700,
-              color: "#333",
-              lineHeight: 1.1,
-            }}
-          >
-            Login here.
-          </Typography>
-        </Box>
+    <FormLayout title="Hello." subtitle="Login here.">
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <FormTextField
+          label="Email address"
+          name="email"
+          type="email"
+          placeholder="Enter your email here"
+          register={register}
+          error={errors.email?.message}
+        />
 
-        {/*form container*/}
-        <Box sx={{ backgroundColor: "white", borderRadius: 2, padding: 3 }}>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <Box sx={{ mb: 3 }}>
-              <FormLabel sx={{ mb: 1, display: "block", fontWeight: 500 }}>
-                Email address
-              </FormLabel>
-              <TextField
-                {...register("email")}
-                type="email"
-                placeholder="Enter your email here"
-                fullWidth
-                error={!!errors.email}
-                helperText={errors.email?.message}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: "16px",
-                    padding: "4px",
-                    "& fieldset": {
-                      borderColor: errors.email ? "#f87171" : "#e5e7eb",
-                    },
-                    "&:hover fieldset": {
-                      borderColor: "#7c6fb0",
-                    },
-                    "&.Mui-focused fieldset": {
-                      borderColor: "#7c6fb0",
-                      borderWidth: "2px",
-                    },
-                  },
-                  "& .MuiOutlinedInput-input": {
-                    padding: "16px",
-                    color: "#374151",
-                    "&::placeholder": {
-                      color: "#9ca3af",
-                      opacity: 1,
-                    },
-                  },
-                }}
-              />
-            </Box>
+        <FormTextField
+          label="Password"
+          name="password"
+          placeholder="Type in here"
+          register={register}
+          error={errors.password?.message}
+          isPassword={true}
+        />
 
-            {/*password*/}
-            <Box sx={{ mb: 4 }}>
-              <FormLabel sx={{ mb: 1, display: "block", fontWeight: 500 }}>
-                Password
-              </FormLabel>
-              <TextField
-                {...register("password")}
-                type={showPassword ? "text" : "password"}
-                placeholder="Type in here"
-                fullWidth
-                error={!!errors.password}
-                helperText={errors.password?.message}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={() => setShowPassword(!showPassword)}
-                        edge="end"
-                        aria-label={
-                          showPassword ? "Hide password" : "Show password"
-                        }
-                        sx={{
-                          color: "#9ca3af",
-                          "&:hover": {
-                            color: "#6b7280",
-                          },
-                        }}
-                      >
-                        {showPassword ? (
-                          <EyeOff size={20} />
-                        ) : (
-                          <Eye size={20} />
-                        )}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-                sx={{
-                  "& .MuiOutlinedInput-root": {
-                    borderRadius: "16px",
-                    padding: "4px",
-                    "& fieldset": {
-                      borderColor: errors.password ? "#f87171" : "#e5e7eb",
-                    },
-                    "&:hover fieldset": {
-                      borderColor: "#7c6fb0",
-                    },
-                    "&.Mui-focused fieldset": {
-                      borderColor: "#7c6fb0",
-                      borderWidth: "2px",
-                    },
-                  },
-                  "& .MuiOutlinedInput-input": {
-                    padding: "16px",
-                    color: "#374151",
-                    "&::placeholder": {
-                      color: "#9ca3af",
-                      opacity: 1,
-                    },
-                  },
-                }}
-              />
-            </Box>
-
-            {/*submit button*/}
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              fullWidth
-              sx={{
-                backgroundColor: "#7c6fb0",
-                color: "white",
-                padding: "12px 16px",
-                borderRadius: "12px",
-                fontSize: "16px",
-                fontWeight: 500,
-                textTransform: "none",
-                "&:hover": {
-                  backgroundColor: "#6a5996",
-                },
-                "&:disabled": {
-                  opacity: 0.5,
-                  cursor: "not-allowed",
-                },
-              }}
-            >
-              {isSubmitting ? "Logging in..." : "Login"}
-            </Button>
-          </form>
-          <Typography variant="body1" sx={{ textAlign: "center", mt: 2 }}>
-            Don't have a loan? <Link to="/register">Register</Link>
-          </Typography>
-        </Box>
-      </Box>
-    </Container>
+        <FormButton type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "Logging in..." : "Login"}
+        </FormButton>
+      </form>
+      <Typography variant="body1" sx={{ textAlign: "center", mt: 2 }}>
+        Don't have a loan? <Link to="/register">Register</Link>
+      </Typography>
+    </FormLayout>
   );
 }

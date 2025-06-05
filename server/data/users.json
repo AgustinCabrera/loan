@@ -64,5 +64,38 @@
     "lastName": "Picapiedras",
     "name": "Pedro",
     "id": "ed5009d8-0420-4751-8380-cf8e66b8e279"
+  },
+  {
+    "phone": "(123) 456-7890",
+    "loanAmount": "35000",
+    "birthDate": "1999-01-01",
+    "password": "$2b$10$5q.xTEE.mTnM8zcy6KrzSe713PsvOCOLFJc6mj6fJP9QkVouiXvHS",
+    "address": "Nicaragua 2000",
+    "email": "pepeter@gmail.com",
+    "lastName": "Peter",
+    "name": "Pedro",
+    "id": "438e2577-b331-4d47-b882-543d546656b0"
+  },
+  {
+    "phone": "(123) 456-7890",
+    "loanAmount": "44999",
+    "birthDate": "1998-01-02",
+    "password": "$2b$10$WUSpwDbjgAB59pkqAolhdu.7oBvImerlulMUg0hMx8QV.N/XiHOvC",
+    "address": "Kilbel Facundo Zuviria 123",
+    "email": "tinchomartin@gmail.com",
+    "lastName": "Rodriguez",
+    "name": "Tincho",
+    "id": "8edb772a-4232-425d-88cb-5a76776ff91c"
+  },
+  {
+    "phone": "(123) 456-7890",
+    "loanAmount": "80000",
+    "birthDate": "2000-01-01",
+    "password": "$2b$10$yZJ9oT9uQF.VYFM.c6tMted47m4ktxIQt92L7jyS0Ya6fMFGRP1FO",
+    "address": "Piedras Blancas 255",
+    "email": "sa@gmail.com",
+    "lastName": "Alvarez",
+    "name": "Sergio",
+    "id": "1b986641-f0a8-4eec-962b-8320cca5375b"
   }
 ]
